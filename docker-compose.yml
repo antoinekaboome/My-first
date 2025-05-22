@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: stockapp
+    volumes:
+      - db-data:/var/lib/mysql
+  backend:
+    build: ./backend
+    volumes:
+      - ./backend:/var/www/html
+    environment:
+      DB_HOST: db
+      DB_NAME: stockapp
+      DB_USER: root
+      DB_PASS: secret
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+volumes:
+  db-data:
+
