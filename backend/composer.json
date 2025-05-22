@@ -1,0 +1,10 @@
+{
+    "name": "mycompany/stockapp",
+    "description": "Stock management application",
+    "require": {
+        "ext-pdo": "*"
+    },
+    "autoload": {
+        "psr-4": {"App\\": "src/"}
+    }
+}
