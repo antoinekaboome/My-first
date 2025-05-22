@@ -1,51 +1,27 @@
 <?php
-require_once __DIR__ . '/../src/functions.php';
+// Path to the front controller
+define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR);
 
-$method = $_SERVER['REQUEST_METHOD'];
-$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+// Ensure the current directory is pointing to the front controller's directory
+chdir(__DIR__);
 
-$routes = [
-    'POST' => [
-        '/api/login' => 'login',
-        '/api/products' => 'create_product'
-    ],
-    'GET' => [
-        '/api/products' => 'list_products',
-    ]
-];
-
-if (isset($routes[$method][$path])) {
-    call_user_func($routes[$method][$path]);
-} else {
-    json_response(['error' => 'Not Found'], 404);
+// Load Composer autoload if available
+if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    require __DIR__ . '/../vendor/autoload.php';
 }
 
-function login() {
-    $db = get_db_connection();
-    $input = json_decode(file_get_contents('php://input'), true);
-    $stmt = $db->prepare('SELECT * FROM users WHERE username = ?');
-    $stmt->execute([$input['username']]);
-    $user = $stmt->fetch();
-    if ($user && verify_password($input['password'], $user['password'])) {
-        // simplified token
-        $token = base64_encode(json_encode(['uid' => $user['id'], 'ts' => time()]));
-        json_response(['token' => $token]);
-    } else {
-        json_response(['error' => 'Invalid credentials'], 401);
-    }
+// Bootstrap the CodeIgniter framework
+$pathsPath = realpath(FCPATH . '../app/Config/Paths.php');
+if ($pathsPath === false) {
+    header('HTTP/1.1 503 Service Unavailable.', true, 503);
+    echo 'Paths configuration not found.';
+    exit(1);
 }
 
-function create_product() {
-    $db = get_db_connection();
-    $input = json_decode(file_get_contents('php://input'), true);
-    $stmt = $db->prepare('INSERT INTO products (name, quantity) VALUES (?, ?)');
-    $stmt->execute([$input['name'], $input['quantity']]);
-    json_response(['id' => $db->lastInsertId()]);
-}
+require $pathsPath;
+$paths = new Config\Paths();
 
-function list_products() {
-    $db = get_db_connection();
-    $stmt = $db->query('SELECT * FROM products');
-    json_response($stmt->fetchAll());
-}
+require rtrim($paths->systemDirectory, '/\\') . '/bootstrap.php';
 
+$app = Config\Services::codeigniter();
+$app->run();

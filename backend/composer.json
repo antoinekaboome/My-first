@@ -1,10 +1,12 @@
 {
     "name": "mycompany/stockapp",
-    "description": "Stock management application",
+    "description": "Stock management application using CodeIgniter",
     "require": {
-        "ext-pdo": "*"
+        "php": "^8.0",
+        "ext-pdo": "*",
+        "codeigniter4/framework": "^4.3"
     },
     "autoload": {
-        "psr-4": {"App\\": "src/"}
+        "psr-4": {"App\\": "app/"}
     }
 }
