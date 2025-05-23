@@ -16,10 +16,16 @@ Ce dépôt contient un exemple très simple d'application web qui affiche l'heur
 docker build -t 173.249.48.147:5000/current-time:latest .
 ```
 
-2. Pousser l'image sur le registre :
+
+2. Pousser l'image sur le registre (nécessite un accès) :
+
 
 ```bash
 docker push 173.249.48.147:5000/current-time:latest
 ```
 
+
 Aucune étape de connexion n'est requise pour ce registre public. Le workflow GitHub Actions publiera automatiquement l'image lors des pushs sur la branche `main`.
+
+Configurez les secrets `DOCKER_USERNAME` et `DOCKER_PASSWORD` dans votre dépôt GitHub pour que le workflow puisse publier automatiquement l'image.
+
