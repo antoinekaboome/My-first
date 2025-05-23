@@ -21,7 +21,6 @@ class ProductCreate(ProductBase):
 
 class Product(ProductBase):
     id: str
-
     class Config:
         orm_mode = True
 
@@ -37,7 +36,6 @@ class CategoryCreate(CategoryBase):
 
 class Category(CategoryBase):
     id: str
-
     class Config:
         orm_mode = True
 
@@ -55,7 +53,6 @@ class ClientCreate(ClientBase):
 
 class Client(ClientBase):
     id: str
-
     class Config:
         orm_mode = True
 
