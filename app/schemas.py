@@ -26,6 +26,7 @@ class Product(ProductBase):
         orm_mode = True
 
 
+
 class CategoryBase(BaseModel):
     name: str
 
@@ -57,3 +58,4 @@ class Client(ClientBase):
 
     class Config:
         orm_mode = True
+

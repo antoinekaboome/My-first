@@ -9,6 +9,12 @@ app.include_router(products.router)
 app.include_router(categories.router)
 app.include_router(clients.router)
 
+
+
+app = FastAPI(title="Product Catalog API", docs_url="/swagger")
+
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app.main:app", host="0.0.0.0", port=80)

@@ -8,10 +8,12 @@ router = APIRouter(prefix="/products", tags=["products"], dependencies=[Depends(
 def get_db_product(product_id: str):
     db = database.get_db()
     cur = db.execute(
+
         "SELECT id, name, description, price, in_stock, category_id FROM products WHERE id=?",
         (product_id,),
     )
     return cur.fetchone()
+
 
 
 @router.post("/", response_model=schemas.Product)
@@ -19,6 +21,7 @@ def create_product(product: schemas.ProductCreate, token: str = Depends(auth.oau
     auth.get_current_user_token(token)
     product_id = str(uuid.uuid4())
     db = database.get_db()
+
     # ensure category exists
     cur = db.execute("SELECT id FROM categories WHERE id=?", (product.category_id,))
     if not cur.fetchone():
@@ -33,6 +36,7 @@ def create_product(product: schemas.ProductCreate, token: str = Depends(auth.oau
             int(product.in_stock),
             product.category_id,
         ),
+
     )
     db.commit()
     return schemas.Product(id=product_id, **product.dict())
@@ -42,6 +46,7 @@ def create_product(product: schemas.ProductCreate, token: str = Depends(auth.oau
 def list_products(token: str = Depends(auth.oauth2_scheme)):
     auth.get_current_user_token(token)
     db = database.get_db()
+
     cur = db.execute("SELECT id, name, description, price, in_stock, category_id FROM products")
     rows = cur.fetchall()
     return [
@@ -55,6 +60,7 @@ def list_products(token: str = Depends(auth.oauth2_scheme)):
         )
         for row in rows
     ]
+
 
 
 @router.get("/{product_id}", response_model=schemas.Product)
@@ -79,6 +85,7 @@ def update_product(product_id: str, product: schemas.ProductCreate, token: str =
     db = database.get_db()
     if not get_db_product(product_id):
         raise HTTPException(status_code=404, detail="Product not found")
+
     if not db.execute("SELECT id FROM categories WHERE id=?", (product.category_id,)).fetchone():
         raise HTTPException(status_code=404, detail="Category not found")
     db.execute(
@@ -91,6 +98,7 @@ def update_product(product_id: str, product: schemas.ProductCreate, token: str =
             product.category_id,
             product_id,
         ),
+
     )
     db.commit()
     return schemas.Product(id=product_id, **product.dict())

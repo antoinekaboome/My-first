@@ -64,10 +64,12 @@ def test_product_crud():
     token = get_token()
     headers = {"Authorization": f"Bearer {token}"}
 
+
     # create category for products
     code, cat = http_request("POST", "/categories/", {"name": "Tools"}, headers=headers)
     assert code == 200
     category_id = cat["id"]
+
 
     product = {
         "name": "Widget",
@@ -138,3 +140,4 @@ def test_category_and_client_crud():
 
     code, _ = http_request("DELETE", f"/categories/{cat_id}", headers=headers)
     assert code == 200
+
