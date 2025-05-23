@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Heure courante</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #clock {
+            font-size: 2em;
+        }
+    </style>
+</head>
+<body>
+    <div id="clock">--:--:--</div>
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            document.getElementById('clock').textContent = timeString;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
