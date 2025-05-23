@@ -1,39 +1,51 @@
-# My-first
+# Product Catalog API
 
-Ce dépôt contient un exemple très simple d'application web qui affiche l'heure courante.
-Cette nouvelle version propose une interface plus attrayante avec un fond dégradé et une police de style digital. Elle affiche également une horloge analogique. L'utilisateur peut maintenant choisir le fuseau horaire à afficher grâce à un menu déroulant.
+This project contains a simple REST API built with FastAPI to manage a product catalog. It demonstrates CRUD operations, JWT authentication and includes tests with Pytest. The API uses SQLite for persistence.
 
-## Fichiers
+## Structure
 
-- `index.html` : page web affichant l'heure locale en JavaScript avec une horloge numérique et une version analogique. Un sélecteur permet de choisir le fuseau horaire désiré.
-- `Dockerfile` : image Docker basée sur `nginx` servant le fichier HTML.
-- `.github/workflows/docker-publish.yml` : workflow GitHub Actions pour construire et publier l'image sur `173.249.48.147:5000`.
-
-## Utilisation
-
-1. Construire l'image localement :
-
-```bash
-docker build -t 173.249.48.147:5000/current-time:latest .
+```
+app/
+    main.py         - FastAPI application
+    database.py     - SQLite connection and table creation
+    auth.py         - minimal JWT implementation
+    schemas.py      - Pydantic models
+    routes/
+        users.py      - user registration and token routes
+        products.py   - CRUD routes for products
+        categories.py - CRUD routes for categories
+        clients.py    - CRUD routes for clients
 ```
 
+## Running locally
 
-2. Pousser l'image sur le registre (nécessite un accès) :
-
+Create a virtual environment with Python 3.11 and install `fastapi` and `uvicorn`. All other modules used are from the standard library.
 
 ```bash
-docker push 173.249.48.147:5000/current-time:latest
+uvicorn app.main:app --reload --port 80
 ```
 
+Create a user with `POST /users/register` passing a JSON body `{"username": "myuser", "password": "mypassword"}`.
+Retrieve a JWT token via `POST /users/token` with the same JSON body and use it in the
+`Authorization` header as `Bearer <token>` for all `/products` operations.
 
-Le registre est public, aucune étape de connexion n'est nécessaire. Le workflow GitHub Actions publiera automatiquement l'image lors des pushs sur la branche `main`.
+The interactive API docs will be available at `http://localhost:80/docs`.
 
+## Docker
 
-## Déploiement automatique
+A simple `Dockerfile` is provided to run the API. Build and run it with:
 
-Lorsque le workflow pousse l'image sur le registre, il se connecte ensuite au serveur pour mettre à jour le conteneur en cours d'exécution. Pour cela, deux secrets doivent être ajoutés dans les paramètres du dépôt :
+```bash
+docker build -t product-api .
+docker run -p 80:80 product-api
+```
 
-- `SERVER_USER` : nom d'utilisateur SSH.
-- `SERVER_SSH_KEY` : clé privée permettant la connexion.
+`docker-compose.yml` shows how to launch the container.
 
-Une fois ces secrets renseignés, le workflow exécutera `docker pull`, arrêtera l'ancien conteneur s'il existe puis lancera la nouvelle image.
+## Tests
+
+Run the tests with:
+
+```bash
+pytest
+```
