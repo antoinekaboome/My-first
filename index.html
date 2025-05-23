@@ -57,6 +57,14 @@
 </head>
 <body>
     <div>
+        <label for="langSelect">Langue:</label>
+        <select id="langSelect">
+            <option value="fr">Français</option>
+            <option value="en">English</option>
+            <option value="ja">日本語</option>
+        </select>
+    </div>
+    <div>
         <label for="timezoneSelect">Fuseau horaire :</label>
         <select id="timezoneSelect">
             <option value="local">Local</option>
@@ -74,6 +82,20 @@
     <div id="clock">--:--:--</div>
     <script>
         const timezoneSelect = document.getElementById('timezoneSelect');
+        const langSelect = document.getElementById('langSelect');
+        const tzLabel = document.querySelector('label[for="timezoneSelect"]');
+        const translations = {
+            fr: { title: 'Heure courante', tz: 'Fuseau horaire :' },
+            en: { title: 'Current time', tz: 'Time zone:' },
+            ja: { title: '現在時刻', tz: 'タイムゾーン:' }
+        };
+
+        function updateLang() {
+            const lang = langSelect.value;
+            document.documentElement.lang = lang;
+            document.title = translations[lang].title;
+            tzLabel.textContent = translations[lang].tz;
+        }
 
         function getDateInZone() {
             const zone = timezoneSelect.value;
@@ -106,12 +128,15 @@
             updateAnalogClock();
         });
 
+        langSelect.addEventListener('change', updateLang);
+
         setInterval(() => {
             updateClock();
             updateAnalogClock();
         }, 1000);
         updateClock();
         updateAnalogClock();
+        updateLang();
     </script>
 </body>
 </html>
