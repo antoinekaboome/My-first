@@ -25,7 +25,5 @@ docker push 173.249.48.147:5000/current-time:latest
 ```
 
 
-Aucune étape de connexion n'est requise pour ce registre public. Le workflow GitHub Actions publiera automatiquement l'image lors des pushs sur la branche `main`.
-
-Configurez les secrets `DOCKER_USERNAME` et `DOCKER_PASSWORD` dans votre dépôt GitHub pour que le workflow puisse publier automatiquement l'image.
+Le registre est public, aucune étape de connexion n'est nécessaire. Le workflow GitHub Actions publiera automatiquement l'image lors des pushs sur la branche `main`.
 
