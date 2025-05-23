@@ -64,11 +64,16 @@ def test_product_crud():
     token = get_token()
     headers = {"Authorization": f"Bearer {token}"}
 
+    # create category for products
+    code, cat = http_request("POST", "/categories/", {"name": "Tools"}, headers=headers)
+    assert code == 200
+    category_id = cat["id"]
     product = {
         "name": "Widget",
         "description": "A useful widget",
         "price": 9.99,
         "in_stock": True,
+        "category_id": category_id,
     }
     code, data = http_request("POST", "/products/", product, headers=headers)
     assert code == 200
@@ -92,3 +97,43 @@ def test_product_crud():
 
     code, _ = http_request("GET", f"/products/{product_id}", headers=headers)
     assert code == 404
+
+
+def test_category_and_client_crud():
+    token = get_token()
+    headers = {"Authorization": f"Bearer {token}"}
+
+    # Categories
+    code, data = http_request("POST", "/categories/", {"name": "Gadgets"}, headers=headers)
+    assert code == 200
+    cat_id = data["id"]
+
+    code, data = http_request("GET", f"/categories/{cat_id}", headers=headers)
+    assert code == 200
+    assert data["name"] == "Gadgets"
+
+    code, data = http_request("PUT", f"/categories/{cat_id}", {"name": "Widgets"}, headers=headers)
+    assert code == 200
+    assert data["name"] == "Widgets"
+
+    # Clients
+    client = {"name": "Alice", "tel": "123", "email": "a@example.com", "address": "Street"}
+    code, data = http_request("POST", "/clients/", client, headers=headers)
+    assert code == 200
+    client_id = data["id"]
+
+    code, data = http_request("GET", f"/clients/{client_id}", headers=headers)
+    assert code == 200
+    assert data["name"] == "Alice"
+
+    client_update = dict(client)
+    client_update["name"] = "Alice B"
+    code, data = http_request("PUT", f"/clients/{client_id}", client_update, headers=headers)
+    assert code == 200
+    assert data["name"] == "Alice B"
+
+    code, _ = http_request("DELETE", f"/clients/{client_id}", headers=headers)
+    assert code == 200
+
+    code, _ = http_request("DELETE", f"/categories/{cat_id}", headers=headers)
+    assert code == 200

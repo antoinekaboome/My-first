@@ -11,8 +11,12 @@ app/
     auth.py         - minimal JWT implementation
     schemas.py      - Pydantic models
     routes/
-        users.py    - user registration and token routes
-        products.py - CRUD routes for products
+
+        users.py      - user registration and token routes
+        products.py   - CRUD routes for products
+        categories.py - CRUD routes for categories
+        clients.py    - CRUD routes for clients
+
 ```
 
 ## Running locally
@@ -20,7 +24,9 @@ app/
 Create a virtual environment with Python 3.11 and install `fastapi` and `uvicorn`. All other modules used are from the standard library.
 
 ```bash
-uvicorn app.main:app --reload
+
+uvicorn app.main:app --reload --port 80
+
 ```
 
 Create a user with `POST /users/register` passing a JSON body `{"username": "myuser", "password": "mypassword"}`.
@@ -33,6 +39,10 @@ The interactive API docs will be available at `http://localhost/swagger`.
 
 A simple `Dockerfile` is provided to run the API. Build and run it with:
 
+## Docker
+
+A simple `Dockerfile` is provided to run the API. Build and run it with:
+
 ```bash
 docker build -t product-api .
 docker run -p 80:80 product-api
@@ -40,9 +50,34 @@ docker run -p 80:80 product-api
 
 `docker-compose.yml` shows how to launch the container.
 
+
 ## Tests
 
 Run the tests with:
+
+
+
+
+
+The interactive API docs will be available at `http://localhost:80/docs`.
+
+
+## Docker
+
+A simple `Dockerfile` is provided to run the API. Build and run it with:
+
+```bash
+
+docker run -p 80:80 product-api
+
+```
+
+`docker-compose.yml` shows how to launch the container.
+
+## Tests
+
+Run the tests with:
+
 
 ```bash
 pytest
