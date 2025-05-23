@@ -33,6 +33,7 @@
             height: 100%;
             overflow: hidden;
             z-index: 0;
+
         }
         
         .particle {
@@ -95,6 +96,7 @@
             gap: 20px;
         }
         
+
         .control-group {
             display: flex;
             align-items: center;
@@ -143,19 +145,25 @@
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
             animation: pulse 4s ease-in-out infinite;
+
             box-shadow:
+
                 0 0 30px rgba(255, 255, 255, 0.1),
                 inset 0 0 30px rgba(255, 255, 255, 0.05);
         }
         
         @keyframes pulse {
             0%, 100% {
+
                 box-shadow:
+
                     0 0 30px rgba(255, 255, 255, 0.1),
                     inset 0 0 30px rgba(255, 255, 255, 0.05);
             }
             50% {
+
                 box-shadow:
+
                     0 0 40px rgba(255, 255, 255, 0.2),
                     inset 0 0 40px rgba(255, 255, 255, 0.1);
             }
@@ -262,7 +270,9 @@
             padding: 25px 35px;
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+
             box-shadow:
+
                 0 10px 30px rgba(0, 0, 0, 0.2),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
             animation: digitalGlow 2s ease-in-out infinite alternate;
@@ -270,13 +280,17 @@
         
         @keyframes digitalGlow {
             0% {
+
                 box-shadow:
+
                     0 10px 30px rgba(0, 0, 0, 0.2),
                     inset 0 1px 0 rgba(255, 255, 255, 0.1),
                     0 0 20px rgba(255, 255, 255, 0.1);
             }
             100% {
+
                 box-shadow:
+
                     0 10px 30px rgba(0, 0, 0, 0.2),
                     inset 0 1px 0 rgba(255, 255, 255, 0.1),
                     0 0 30px rgba(255, 255, 255, 0.2);
@@ -337,6 +351,7 @@
     </style>
 </head>
 <body>
+
     <div class="bg-animation" id="bgAnimation"></div>
     
     <div class="clock-container">
@@ -394,6 +409,7 @@
                 container.appendChild(particle);
             }
         }
+
         
         // Création des marqueurs d'heures
         function createHourMarkers() {
@@ -409,6 +425,7 @@
                 }
                 container.appendChild(marker);
             }
+
         }
         
         // Traductions
@@ -481,6 +498,7 @@
         createHourMarkers();
         updateClock();
         setInterval(updateClock, 1000);
+
     </script>
 </body>
 </html>
