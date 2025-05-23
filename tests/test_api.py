@@ -1,0 +1,112 @@
+import subprocess
+import time
+import urllib.request
+import urllib.parse
+import json
+
+SERVER_PORT = 8001
+BASE_URL = f"http://127.0.0.1:{SERVER_PORT}"
+
+
+def start_server():
+    return subprocess.Popen([
+        "python", "-m", "uvicorn", "app.main:app", "--port", str(SERVER_PORT)
+    ])
+
+
+def stop_server(proc):
+    proc.terminate()
+    proc.wait()
+
+
+def http_request(method, path, data=None, headers=None):
+    headers = headers or {}
+    if isinstance(data, dict):
+        data_bytes = json.dumps(data).encode()
+        headers.setdefault("Content-Type", "application/json")
+    elif data is not None:
+        data_bytes = data
+    else:
+        data_bytes = None
+    req = urllib.request.Request(BASE_URL + path, data=data_bytes, headers=headers, method=method)
+    try:
+        with urllib.request.urlopen(req) as resp:
+            return resp.getcode(), json.loads(resp.read().decode())
+    except urllib.error.HTTPError as e:
+        return e.code, json.loads(e.read().decode())
+
+
+def setup_module(module):
+    global proc
+    proc = start_server()
+    time.sleep(1)
+
+
+def teardown_module(module):
+    stop_server(proc)
+
+
+def get_token():
+    http_request("POST", "/users/register", {"username": "test", "password": "secret"})
+    code, data = http_request("POST", "/users/token", {"username": "test", "password": "secret"})
+    assert code == 200
+    return data["access_token"]
+
+
+def test_full_crud():
+    token = get_token()
+    headers = {"Authorization": f"Bearer {token}"}
+
+    # Category CRUD
+    code, cat = http_request("POST", "/categories/", {"name": "Electronics"}, headers)
+    assert code == 200
+    cat_id = cat["id"]
+
+    code, _ = http_request("GET", f"/categories/{cat_id}", headers=headers)
+    assert code == 200
+
+    code, cats = http_request("GET", "/categories/", headers=headers)
+    assert code == 200 and len(cats) >= 1
+
+    code, upd_cat = http_request("PUT", f"/categories/{cat_id}", {"name": "Updated"}, headers)
+    assert code == 200 and upd_cat["name"] == "Updated"
+
+    # Client CRUD
+    client_data = {"name": "Alice", "tel": "123", "email": "a@example.com", "address": "Street"}
+    code, client = http_request("POST", "/clients/", client_data, headers)
+    assert code == 200
+    client_id = client["id"]
+
+    code, _ = http_request("GET", f"/clients/{client_id}", headers=headers)
+    assert code == 200
+
+    code, clients = http_request("GET", "/clients/", headers=headers)
+    assert code == 200 and len(clients) >= 1
+
+    client_update = client_data | {"name": "Bob"}
+    code, upd_client = http_request("PUT", f"/clients/{client_id}", client_update, headers)
+    assert code == 200 and upd_client["name"] == "Bob"
+
+    # Product CRUD
+    product = {"name": "Widget", "description": "Tool", "price": 9.9, "in_stock": True, "category_id": cat_id}
+    code, prod = http_request("POST", "/products/", product, headers)
+    assert code == 200
+    prod_id = prod["id"]
+
+    code, _ = http_request("GET", f"/products/{prod_id}", headers=headers)
+    assert code == 200
+
+    code, prods = http_request("GET", "/products/", headers=headers)
+    assert code == 200 and len(prods) >= 1
+
+    update = product | {"price": 15.0}
+    code, upd_prod = http_request("PUT", f"/products/{prod_id}", update, headers)
+    assert code == 200 and upd_prod["price"] == 15.0
+
+    # Deletes
+    http_request("DELETE", f"/products/{prod_id}", headers=headers)
+    http_request("DELETE", f"/clients/{client_id}", headers=headers)
+    http_request("DELETE", f"/categories/{cat_id}", headers=headers)
+
+    code, _ = http_request("GET", f"/products/{prod_id}", headers=headers)
+    assert code == 404

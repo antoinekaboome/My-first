@@ -1,39 +1,49 @@
-# My-first
+# Product Catalog API
 
-Ce dépôt contient un exemple très simple d'application web qui affiche l'heure courante.
-Cette nouvelle version propose une interface plus attrayante avec un fond dégradé et une police de style digital. Elle affiche également une horloge analogique. L'utilisateur peut maintenant choisir le fuseau horaire à afficher grâce à un menu déroulant.
+This project provides a small REST API built with **FastAPI** to manage products, categories and clients. It uses SQLite for storage and secures write operations with a minimal JWT based authentication.
 
-## Fichiers
+## Structure
 
-- `index.html` : page web affichant l'heure locale en JavaScript avec une horloge numérique et une version analogique. Un sélecteur permet de choisir le fuseau horaire désiré.
-- `Dockerfile` : image Docker basée sur `nginx` servant le fichier HTML.
-- `.github/workflows/docker-publish.yml` : workflow GitHub Actions pour construire et publier l'image sur `173.249.48.147:5000`.
-
-## Utilisation
-
-1. Construire l'image localement :
-
-```bash
-docker build -t 173.249.48.147:5000/current-time:latest .
+```
+app/
+    main.py          - FastAPI application entry point
+    database.py      - SQLite connection and table creation
+    auth.py          - JWT helpers
+    schemas.py       - Pydantic models
+    routes/
+        users.py     - user registration and token routes
+        categories.py- CRUD routes for categories
+        products.py  - CRUD routes for products
+        clients.py   - CRUD routes for clients
 ```
 
+## Running locally
 
-2. Pousser l'image sur le registre (nécessite un accès) :
-
+Install dependencies and start the server:
 
 ```bash
-docker push 173.249.48.147:5000/current-time:latest
+uvicorn app.main:app --reload --port 80
 ```
 
+Obtain a token by registering a user at `POST /users/register` then requesting `POST /users/token`. Use this token in the `Authorization` header as `Bearer <token>` for all secured routes.
 
-Le registre est public, aucune étape de connexion n'est nécessaire. Le workflow GitHub Actions publiera automatiquement l'image lors des pushs sur la branche `main`.
+Swagger UI is available at `http://localhost/swagger`.
 
+## Docker
 
-## Déploiement automatique
+Build and run the API in Docker:
 
-Lorsque le workflow pousse l'image sur le registre, il se connecte ensuite au serveur pour mettre à jour le conteneur en cours d'exécution. Pour cela, deux secrets doivent être ajoutés dans les paramètres du dépôt :
+```bash
+docker build -t product-api .
+docker run -p 80:80 product-api
+```
 
-- `SERVER_USER` : nom d'utilisateur SSH.
-- `SERVER_SSH_KEY` : clé privée permettant la connexion.
+`docker-compose.yml` provides a compose configuration that exposes port 80.
 
-Une fois ces secrets renseignés, le workflow exécutera `docker pull`, arrêtera l'ancien conteneur s'il existe puis lancera la nouvelle image.
+## Tests
+
+Run the automated tests with:
+
+```bash
+pytest -q
+```
