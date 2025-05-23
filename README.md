@@ -27,3 +27,12 @@ docker push 173.249.48.147:5000/current-time:latest
 
 Le registre est public, aucune étape de connexion n'est nécessaire. Le workflow GitHub Actions publiera automatiquement l'image lors des pushs sur la branche `main`.
 
+
+## Déploiement automatique
+
+Lorsque le workflow pousse l'image sur le registre, il se connecte ensuite au serveur pour mettre à jour le conteneur en cours d'exécution. Pour cela, deux secrets doivent être ajoutés dans les paramètres du dépôt :
+
+- `SERVER_USER` : nom d'utilisateur SSH.
+- `SERVER_SSH_KEY` : clé privée permettant la connexion.
+
+Une fois ces secrets renseignés, le workflow exécutera `docker pull`, arrêtera l'ancien conteneur s'il existe puis lancera la nouvelle image.

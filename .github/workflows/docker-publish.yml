@@ -22,5 +22,16 @@ jobs:
       run: |
         docker push ${{ env.REGISTRY }}/current-time:latest
 
+    - name: Deploy container
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: 173.249.48.147
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: |
+          docker pull 173.249.48.147:5000/current-time:latest
+          docker rm -f current-time || true
+          docker run -d --name current-time -p 80:80 173.249.48.147:5000/current-time:latest
+
 env:
   REGISTRY: 173.249.48.147:5000
