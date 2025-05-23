@@ -9,8 +9,10 @@
             background: linear-gradient(45deg, #3a7bd5, #3a6073);
             color: #fff;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            gap: 40px;
             height: 100vh;
             margin: 0;
         }
@@ -23,9 +25,42 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
         }
+        #analogClock {
+            width: 200px;
+            height: 200px;
+            border: 8px solid #fff;
+            border-radius: 50%;
+            position: relative;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom;
+            background: #fff;
+        }
+        #hour {
+            width: 6px;
+            height: 50px;
+        }
+        #minute {
+            width: 4px;
+            height: 70px;
+        }
+        #second {
+            width: 2px;
+            height: 90px;
+            background: #f00;
+        }
     </style>
 </head>
 <body>
+    <div id="analogClock">
+        <div id="hour" class="hand"></div>
+        <div id="minute" class="hand"></div>
+        <div id="second" class="hand"></div>
+    </div>
     <div id="clock">--:--:--</div>
     <script>
         function updateClock() {
@@ -33,8 +68,23 @@
             const timeString = now.toLocaleTimeString();
             document.getElementById('clock').textContent = timeString;
         }
-        setInterval(updateClock, 1000);
+
+        function updateAnalogClock() {
+            const now = new Date();
+            const sec = now.getSeconds();
+            const min = now.getMinutes();
+            const hr  = now.getHours();
+            document.getElementById('second').style.transform = `rotate(${sec * 6}deg)`;
+            document.getElementById('minute').style.transform = `rotate(${min * 6 + sec * 0.1}deg)`;
+            document.getElementById('hour').style.transform = `rotate(${(hr % 12) * 30 + min * 0.5}deg)`;
+        }
+
+        setInterval(() => {
+            updateClock();
+            updateAnalogClock();
+        }, 1000);
         updateClock();
+        updateAnalogClock();
     </script>
 </body>
 </html>
