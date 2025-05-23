@@ -17,12 +17,35 @@ conn.execute(
 
 conn.execute(
     """
+    CREATE TABLE IF NOT EXISTS categories (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL
+    )
+    """
+)
+
+conn.execute(
+    """
+    CREATE TABLE IF NOT EXISTS clients (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        tel TEXT,
+        email TEXT,
+        address TEXT
+    )
+    """
+)
+
+conn.execute(
+    """
     CREATE TABLE IF NOT EXISTS products (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         description TEXT,
         price REAL NOT NULL,
-        in_stock INTEGER NOT NULL
+        in_stock INTEGER NOT NULL,
+        category_id TEXT NOT NULL,
+        FOREIGN KEY (category_id) REFERENCES categories(id)
     )
     """
 )

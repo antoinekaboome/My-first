@@ -11,8 +11,11 @@ app/
     auth.py         - minimal JWT implementation
     schemas.py      - Pydantic models
     routes/
-        users.py    - user registration and token routes
-        products.py - CRUD routes for products
+        users.py      - user registration and token routes
+        products.py   - CRUD routes for products
+        categories.py - CRUD routes for categories
+        clients.py    - CRUD routes for clients
+
 ```
 
 ## Running locally
@@ -30,7 +33,9 @@ Retrieve a JWT token via `POST /users/token` with the same JSON body and use it 
 `Authorization` header as `Bearer <token>` for all `/products` operations.
 
 
+
 The interactive API docs will be available at `http://localhost/swagger`.
+
 
 ## Docker
 
@@ -43,9 +48,12 @@ docker run -p 80:80 product-api
 
 `docker-compose.yml` shows how to launch the container.
 
+
 ## Tests
 
 Run the tests with:
+
+
 
 
 
@@ -67,6 +75,7 @@ docker run -p 80:80 product-api
 ## Tests
 
 Run the tests with:
+
 
 
 ```bash
