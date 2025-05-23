@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from app.routes import users, products
 
+
 app = FastAPI(title="Product Catalog API", docs_url="/swagger")
+
 
 app.include_router(users.router)
 app.include_router(products.router)
