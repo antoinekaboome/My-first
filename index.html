@@ -56,6 +56,16 @@
     </style>
 </head>
 <body>
+    <div>
+        <label for="timezoneSelect">Fuseau horaire :</label>
+        <select id="timezoneSelect">
+            <option value="local">Local</option>
+            <option value="UTC">UTC</option>
+            <option value="Europe/Paris">Europe/Paris</option>
+            <option value="America/New_York">America/New_York</option>
+            <option value="Asia/Tokyo">Asia/Tokyo</option>
+        </select>
+    </div>
     <div id="analogClock">
         <div id="hour" class="hand"></div>
         <div id="minute" class="hand"></div>
@@ -63,14 +73,26 @@
     </div>
     <div id="clock">--:--:--</div>
     <script>
-        function updateClock() {
+        const timezoneSelect = document.getElementById('timezoneSelect');
+
+        function getDateInZone() {
+            const zone = timezoneSelect.value;
+            if (zone === 'local') {
+                return new Date();
+            }
             const now = new Date();
+            const localeString = now.toLocaleString('en-US', { timeZone: zone });
+            return new Date(localeString);
+        }
+
+        function updateClock() {
+            const now = getDateInZone();
             const timeString = now.toLocaleTimeString();
             document.getElementById('clock').textContent = timeString;
         }
 
         function updateAnalogClock() {
-            const now = new Date();
+            const now = getDateInZone();
             const sec = now.getSeconds();
             const min = now.getMinutes();
             const hr  = now.getHours();
@@ -78,6 +100,11 @@
             document.getElementById('minute').style.transform = `rotate(${min * 6 + sec * 0.1}deg)`;
             document.getElementById('hour').style.transform = `rotate(${(hr % 12) * 30 + min * 0.5}deg)`;
         }
+
+        timezoneSelect.addEventListener('change', () => {
+            updateClock();
+            updateAnalogClock();
+        });
 
         setInterval(() => {
             updateClock();

@@ -1,11 +1,11 @@
 # My-first
 
 Ce dépôt contient un exemple très simple d'application web qui affiche l'heure courante.
-Cette nouvelle version propose une interface plus attrayante avec un fond dégradé et une police de style digital. Elle affiche également une horloge analogique.
+Cette nouvelle version propose une interface plus attrayante avec un fond dégradé et une police de style digital. Elle affiche également une horloge analogique. L'utilisateur peut maintenant choisir le fuseau horaire à afficher grâce à un menu déroulant.
 
 ## Fichiers
 
-- `index.html` : page web affichant l'heure locale en JavaScript avec une horloge numérique et une version analogique.
+- `index.html` : page web affichant l'heure locale en JavaScript avec une horloge numérique et une version analogique. Un sélecteur permet de choisir le fuseau horaire désiré.
 - `Dockerfile` : image Docker basée sur `nginx` servant le fichier HTML.
 - `.github/workflows/docker-publish.yml` : workflow GitHub Actions pour construire et publier l'image sur `173.249.48.147:5000`.
 
