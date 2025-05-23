@@ -33,6 +33,7 @@
             height: 100%;
             overflow: hidden;
             z-index: 0;
+
         }
         
         .particle {
@@ -95,6 +96,7 @@
             gap: 20px;
         }
         
+
         .control-group {
             display: flex;
             align-items: center;
@@ -143,19 +145,25 @@
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
             animation: pulse 4s ease-in-out infinite;
-            box-shadow: 
+
+            box-shadow:
+
                 0 0 30px rgba(255, 255, 255, 0.1),
                 inset 0 0 30px rgba(255, 255, 255, 0.05);
         }
         
         @keyframes pulse {
             0%, 100% {
-                box-shadow: 
+
+                box-shadow:
+
                     0 0 30px rgba(255, 255, 255, 0.1),
                     inset 0 0 30px rgba(255, 255, 255, 0.05);
             }
             50% {
-                box-shadow: 
+
+                box-shadow:
+
                     0 0 40px rgba(255, 255, 255, 0.2),
                     inset 0 0 40px rgba(255, 255, 255, 0.1);
             }
@@ -262,7 +270,9 @@
             padding: 25px 35px;
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 
+
+            box-shadow:
+
                 0 10px 30px rgba(0, 0, 0, 0.2),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
             animation: digitalGlow 2s ease-in-out infinite alternate;
@@ -270,13 +280,17 @@
         
         @keyframes digitalGlow {
             0% {
-                box-shadow: 
+
+                box-shadow:
+
                     0 10px 30px rgba(0, 0, 0, 0.2),
                     inset 0 1px 0 rgba(255, 255, 255, 0.1),
                     0 0 20px rgba(255, 255, 255, 0.1);
             }
             100% {
-                box-shadow: 
+
+                box-shadow:
+
                     0 10px 30px rgba(0, 0, 0, 0.2),
                     inset 0 1px 0 rgba(255, 255, 255, 0.1),
                     0 0 30px rgba(255, 255, 255, 0.2);
@@ -338,47 +352,47 @@
 </head>
 <body>
 
-    <div>
-        <label for="langSelect">Langue:</label>
-        <select id="langSelect">
-            <option value="fr">Français</option>
-            <option value="en">English</option>
-            <option value="ja">日本語</option>
-        </select>
+    <div class="bg-animation" id="bgAnimation"></div>
+    
+    <div class="clock-container">
+        <div class="controls">
+            <div class="control-group">
+                <span class="control-label">Langue:</span>
+                <select id="languageSelect">
+                    <option value="fr">Français</option>
+                    <option value="en" selected>English</option>
+                    <option value="es">Español</option>
+                    <option value="de">Deutsch</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <span class="control-label">Fuseau horaire:</span>
+                <select id="timezoneSelect">
+                    <option value="local" selected>Local</option>
+                    <option value="UTC">UTC</option>
+                    <option value="America/New_York">New York</option>
+                    <option value="Europe/London">Londres</option>
+                    <option value="Asia/Tokyo">Tokyo</option>
+                    <option value="Australia/Sydney">Sydney</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="clock-face">
+            <div class="hour-markers" id="hourMarkers"></div>
+            <div class="clock-hands">
+                <div class="hand hour-hand" id="hourHand"></div>
+                <div class="hand minute-hand" id="minuteHand"></div>
+                <div class="hand second-hand" id="secondHand"></div>
+            </div>
+            <div class="center-dot"></div>
+        </div>
+        
+        <div class="digital-display">
+            <div class="time-display" id="timeDisplay">5:09:00 PM</div>
+            <div class="date-display" id="dateDisplay">Vendredi 23 Mai 2025</div>
+        </div>
     </div>
-    <div>
-        <label for="timezoneSelect">Fuseau horaire :</label>
-        <select id="timezoneSelect">
-            <option value="local">Local</option>
-            <option value="UTC">UTC</option>
-            <option value="Europe/Paris">Europe/Paris</option>
-            <option value="America/New_York">America/New_York</option>
-            <option value="Asia/Tokyo">Asia/Tokyo</option>
-        </select>
-    </div>
-    <div id="analogClock">
-        <div id="hour" class="hand"></div>
-        <div id="minute" class="hand"></div>
-        <div id="second" class="hand"></div>
-    </div>
-    <div id="clock">--:--:--</div>
-    <script>
-        const timezoneSelect = document.getElementById('timezoneSelect');
-        const langSelect = document.getElementById('langSelect');
-        const tzLabel = document.querySelector('label[for="timezoneSelect"]');
-        const translations = {
-            fr: { title: 'Heure courante', tz: 'Fuseau horaire :' },
-            en: { title: 'Current time', tz: 'Time zone:' },
-            ja: { title: '現在時刻', tz: 'タイムゾーン:' }
-        };
-
-        function updateLang() {
-            const lang = langSelect.value;
-            document.documentElement.lang = lang;
-            document.title = translations[lang].title;
-            tzLabel.textContent = translations[lang].tz;
-        }
-
 
     <script>
         // Création des particules flottantes
@@ -395,6 +409,7 @@
                 container.appendChild(particle);
             }
         }
+
         
         // Création des marqueurs d'heures
         function createHourMarkers() {
@@ -410,6 +425,7 @@
                 }
                 container.appendChild(marker);
             }
+
         }
         
         // Traductions
@@ -440,7 +456,7 @@
             
             let displayTime = now;
             if (timezone !== 'local') {
-                displayTime = new Date(now.toLocaleString('en-US', { timeZone: timezone }));
+                displayTime = new Date(now.toLocaleString("en-US", {timeZone: timezone}));
             }
             
             // Mise à jour des aiguilles
@@ -472,22 +488,16 @@
             const dateString = `${dayName} ${displayTime.getDate()} ${monthName} ${displayTime.getFullYear()}`;
             document.getElementById('dateDisplay').textContent = dateString;
         }
-
-
-        timezoneSelect.addEventListener('change', () => {
-            updateClock();
-            updateAnalogClock();
-        });
-
-        langSelect.addEventListener('change', updateLang);
-
-        setInterval(() => {
-            updateClock();
-            updateAnalogClock();
-        }, 1000);
+        
+        // Événements
+        document.getElementById('languageSelect').addEventListener('change', updateClock);
+        document.getElementById('timezoneSelect').addEventListener('change', updateClock);
+        
+        // Initialisation
+        createParticles();
+        createHourMarkers();
         updateClock();
-        updateAnalogClock();
-        updateLang();
+        setInterval(updateClock, 1000);
 
     </script>
 </body>
