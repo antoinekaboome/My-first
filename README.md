@@ -1,6 +1,7 @@
 # My-first
 
 Ce dépôt contient un exemple très simple d'application web qui affiche l'heure courante.
+Cette nouvelle version propose une interface plus attrayante avec un fond dégradé et une police de style digital.
 
 ## Fichiers
 
