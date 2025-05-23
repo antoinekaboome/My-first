@@ -33,6 +33,29 @@
             position: relative;
             background: rgba(0, 0, 0, 0.2);
         }
+        #stopwatchContainer {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        #stopwatch {
+            font-family: "Courier New", monospace;
+            font-size: 2em;
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+        }
+        #startButton, #stopButton {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        #startButton { background-color: #28a745; color: #fff; }
+        #stopButton  { background-color: #dc3545; color: #fff; }
         .hand {
             position: absolute;
             bottom: 50%;
@@ -72,6 +95,11 @@
         <div id="second" class="hand"></div>
     </div>
     <div id="clock">--:--:--</div>
+    <div id="stopwatchContainer">
+        <div id="stopwatch">00:00:00</div>
+        <button id="startButton">Start</button>
+        <button id="stopButton">Stop</button>
+    </div>
     <script>
         const timezoneSelect = document.getElementById('timezoneSelect');
 
@@ -112,6 +140,45 @@
         }, 1000);
         updateClock();
         updateAnalogClock();
+
+        let stopwatchInterval = null;
+        let startTime = 0;
+        let elapsed = 0;
+
+        function formatTime(ms) {
+            const totalSeconds = Math.floor(ms / 1000);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            return (
+                String(hours).padStart(2, '0') + ':' +
+                String(minutes).padStart(2, '0') + ':' +
+                String(seconds).padStart(2, '0')
+            );
+        }
+
+        function updateStopwatch() {
+            const now = Date.now();
+            const diff = now - startTime + elapsed;
+            document.getElementById('stopwatch').textContent = formatTime(diff);
+        }
+
+        document.getElementById('startButton').addEventListener('click', () => {
+            if (!stopwatchInterval) {
+                elapsed = 0;
+                startTime = Date.now();
+                document.getElementById('stopwatch').textContent = '00:00:00';
+                stopwatchInterval = setInterval(updateStopwatch, 1000);
+            }
+        });
+
+        document.getElementById('stopButton').addEventListener('click', () => {
+            if (stopwatchInterval) {
+                elapsed += Date.now() - startTime;
+                clearInterval(stopwatchInterval);
+                stopwatchInterval = null;
+            }
+        });
     </script>
 </body>
 </html>
